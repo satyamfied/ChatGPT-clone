@@ -1,16 +1,45 @@
-import OpenAI from "openai";
+import express from "express";
 import "dotenv/config";
+import cors from "cors";
 
-const client = new OpenAI({
-  apiKey: process.env.OPENROUTER_API_KEY,
+const app = express();
+const PORT = 8080;
 
-  baseURL: "https://openrouter.ai/api/v1",
+app.use(express.json());
+app.use(cors());
+
+
+app.post("/test", async (req, res) => {
+  const options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: "openai/gpt-3.5-turbo",
+      messages: [
+        {
+          role: "user",
+          content: req.body.message
+        }
+      ]
+    })
+  };
+
+  try{
+    const response = await fetch("https://openrouter.ai/api/v1/chat/completions" , options);
+    const data = await response.json();
+    // console.log(data.choices[0].message.content);
+    res.send(data.choices[0].message.content);
+  }catch(error){
+    console.log(error);
+    res.status(500).send("Error occurred");
+  }
+}); 
+
+
+app.listen(PORT , () => {
+  console.log(`server running on ${PORT}`);
 });
 
-const response = await client.responses.create({
-  model: "openai/gpt-4o-mini",
-
-  input: "Tell a joke about computer science",
-});
-
-console.log(response.output_text);
