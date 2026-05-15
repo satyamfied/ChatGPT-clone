@@ -28,3 +28,5 @@ const getOpenAIResponse = async (message) => {
     res.status(500).send("Error occurred");
   }
 }
+
+export default getOpenAIResponse;
