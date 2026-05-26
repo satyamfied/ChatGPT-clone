@@ -6,7 +6,7 @@ function Sidebar() {
             {/* New Chat Button */}
             <button>
                 <img src="src/assets/blacklogo.png" alt="GPT logo" className="logo"></img>
-                <i class="fa-solid fa-pen-to-square"></i>
+                <i className="fa-solid fa-pen-to-square"></i>
             </button>
 
             {/* History */}
