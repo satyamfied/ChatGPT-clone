@@ -1,11 +1,15 @@
 import "./ChatWindow.css";
 import Chat from "./Chat.jsx";
 import { MyContext } from "./MyContext.jsx";
-import { useContext } from "react";
+import { useContext , useState , useEffect} from "react";
+import {ScaleLoader} from "react-spinners"; 
 
 function ChatWindow() {
-    const { promt, setPromt, reply, setReply , currentThreadId } = useContext(MyContext);
+    const { promt, setPromt, reply, setReply , currentThreadId , setPrevChats } = useContext(MyContext);
+    const [loading, setLoading] = useState(false);
+
     const getReply = async () => {
+        setLoading(true);
         console.log("message : ", promt , "threadID : ", currentThreadId);
         const options = {
             method: "POST",
@@ -22,11 +26,22 @@ function ChatWindow() {
             const response = await fetch("http://localhost:8080/api/chat" , options);
             const res = await response.json();
             console.log(res);
-            setReply(res.reply);
+            setReply(res.message);
         }catch(err){
             console.log(err);
         }
+        setLoading(false);
     };
+
+    useEffect(() => {
+  console.log("EFFECT FIRED — promt:", JSON.stringify(promt), "reply:", JSON.stringify(reply));
+  if(promt && reply){
+    setPrevChats(prevChats => (
+      [...prevChats, {role:"user", content:promt}, {role:"assistant", content:reply}]
+    ));
+  }
+  setPromt("");
+}, [reply]);
 
     return (
         <div className="chatWindow">
@@ -38,6 +53,10 @@ function ChatWindow() {
             </div>
 
             <Chat></Chat>
+
+            <ScaleLoader color= "#fff" loading = {loading}>
+
+            </ScaleLoader>
 
             <div className="chatInput">
                 <div className="inputBox">
