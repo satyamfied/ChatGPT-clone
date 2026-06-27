@@ -3,21 +3,23 @@ import Sidebar from "./Sidebar.jsx";
 import ChatWindow from "./ChatWindow.jsx";
 import { MyContext } from "./MyContext.jsx";
 import { useState } from 'react';
-import {v1 as uuid} from "uuid";
+import {v1 as uuidv1} from "uuid";
 
 function App() {
   const [promt, setPromt] = useState("");
   const [reply, setReply] = useState(null);
-  const [currentThreadId, setCurrentThreadId] = useState(uuid());
+  const [currentThreadId, setCurrentThreadId] = useState(uuidv1());
   const [prevChats , setPrevChats] = useState([]); //Stores All previous chats
   const [newChats , setNewChats] = useState(true); //Stores all new chats
+  const [allThreads, setAllThreads] = useState([]);
 
   const providerValues = {
     promt, setPromt,
     reply, setReply,
     currentThreadId, setCurrentThreadId,
     newChats , setNewChats,
-    prevChats , setPrevChats
+    prevChats , setPrevChats,
+    allThreads, setAllThreads
   };
 
   return (
